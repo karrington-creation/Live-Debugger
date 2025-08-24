@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Editor</title>
+    <script src="https://kit.fontawesome.com/e05d24f6c7.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/editor.css">
+</head>
+<body>
+    <div class="container">
+        <div class="left">
+            <label><i class="fa-brands fa-html5"></i> HTML</label>
+            <textarea onkeyup="run()" id="html" rows="5">
+<!-- Exemple de bouton Bulma -->
+<button class="button is-primary">Bouton bleu</button>
+<button class="button is-danger">Bouton rouge</button>
+            </textarea>
+            
+            <label><i class="fa-brands fa-css3"></i> CSS</label>
+            <textarea onkeyup="run()" id="css" rows="5">
+/* Exemple de surcharge perso */
+body {
+    padding: 20px;
+}
+            </textarea>
+            
+            <label><i class="fa-brands fa-js"></i> JavaScript</label>
+            <textarea onkeyup="run()" id="js" rows="5">
+// Exemple JS : alerte au clic
+document.querySelectorAll("button").forEach(btn => {
+    btn.addEventListener("click", () => alert("Tu as cliqué !"));
+});
+            </textarea>
+        </div>
+        
+        <div class="right">
+            <label><i class="fa-solid fa-play"></i> Output</label>
+            <iframe src="" frameborder="0" id="output"></iframe>
+        </div>
+    </div>
+
+    <script>
+        function run() {
+            let html = document.getElementById("html").value;
+            let css = document.getElementById("css").value;
+            let js = document.getElementById("js").value;
+            let output = document.getElementById("output");
+
+            // Contenu injecté uniquement dans l'iframe
+            let documentContent = `
+                <html>
+                <head>
+                    <!-- Bulma CSS uniquement dans la frame -->
+                    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+                    <style>${css}</style>
+                </head>
+                <body>
+                    ${html}
+                    <script>${js}<\/script>
+                </body>
+                </html>
+            `;
+
+            output.srcdoc = documentContent;
+        }
+
+        // Exécution initiale
+        window.onload = run;
+    </script>
+</body>
+</html>
