@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mini Code Editor avec Monaco</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      font-family: sans-serif;
+    }
+    .left {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      border-right: 2px solid #ddd;
+    }
+    .editor {
+      flex: 1;
+      border-bottom: 1px solid #ddd;
+    }
+    .right {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+    }
+    iframe {
+      flex: 1;
+      border: none;
+    }
+    label {
+      font-size: 14px;
+      font-weight: bold;
+      padding: 6px;
+      background: #f7f7f7;
+      border-bottom: 1px solid #ddd;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
+</head>
+<body>
+  <div class="left">
+    <label>HTML</label>
+    <div id="html-editor" class="editor"></div>
+    <label>CSS</label>
+    <div id="css-editor" class="editor"></div>
+    <label>JavaScript</label>
+    <div id="js-editor" class="editor"></div>
+  </div>
+  <div class="right">
+    <label>Output</label>
+    <iframe id="output"></iframe>
+  </div>
+
+  <script>
+    require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs' }});
+    require(["vs/editor/editor.main"], function () {
+
+      // --- Éditeurs Monaco ---
+      const htmlEditor = monaco.editor.create(document.getElementById("html-editor"), {
+        value: `<button class="button is-primary">Bouton bleu</button>\n<button class="button is-danger">Bouton rouge</button>`,
+        language: "html",
+        theme: "vs-dark",
+        automaticLayout: true
+      });
+
+      const cssEditor = monaco.editor.create(document.getElementById("css-editor"), {
+        value: `body { padding: 20px; }`,
+        language: "css",
+        theme: "vs-dark",
+        automaticLayout: true
+      });
+
+      const jsEditor = monaco.editor.create(document.getElementById("js-editor"), {
+        value: `document.querySelectorAll("button").forEach(btn => {
+  btn.addEventListener("click", () => alert("Tu as cliqué !"));
+});`,
+        language: "javascript",
+        theme: "vs-dark",
+        automaticLayout: true
+      });
+
+      const output = document.getElementById("output");
+
+      function run() {
+        const html = htmlEditor.getValue();
+        const css = cssEditor.getValue();
+        const js = jsEditor.getValue();
+
+        const doc = `
+          <html>
+          <head>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+            <style>${css}</style>
+          </head>
+          <body>
+            ${html}
+            <script>${js}<\/script>
+          </body>
+          </html>
+        `;
+
+        output.srcdoc = doc;
+      }
+
+      // Exécuter à chaque changement
+      [htmlEditor, cssEditor, jsEditor].forEach(ed => {
+        ed.onDidChangeModelContent(run);
+      });
+
+      // Lancer au démarrage
+      run();
+    });
+  </script>
+</body>
+</html>
