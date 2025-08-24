@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Editor</title>
+    <script src="https://kit.fontawesome.com/e05d24f6c7.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/editor.css">
+</head>
+<body>
+    <div class="container">
+        <div class="left">
+            <label for=""><i class="fa-brands fa-html5"></i> HTML</label>
+            <textarea onkeyup="run()" id="html"></textarea>
+            
+            <label for=""><i class="fa-brands fa-css3"></i> CSS</label>
+            <textarea onkeyup="run()" id="css"></textarea>
+            
+            <label for=""><i class="fa-brands fa-js"></i> JavaScript</label>
+            <textarea onkeyup="run()" id="js"></textarea>
+        </div>
+        
+        <div class="right">
+            <label for=""><i class="fa-solid fa-play"></i> Output</label>
+            <iframe src="" frameborder="0" id="output"></iframe>
+        </div>
+    </div>
+
+    <script>
+        function run() {
+            let html = document.getElementById("html").value;
+            let css = document.getElementById("css").value;
+            let js = document.getElementById("js").value;
+            let output = document.getElementById("output");
+
+            output.contentDocument.body.innerHTML = html + "<style>" + css + "</style>";
+            output.contentWindow.eval(js);
+        }
+    </script>
+</body>
+</html>
